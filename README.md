@@ -50,7 +50,7 @@ streamlit run app.py
 ```
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 AI-Powered-Research-Assistant/
