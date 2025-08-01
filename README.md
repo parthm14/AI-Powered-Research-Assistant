@@ -28,14 +28,16 @@ A powerful, interactive Streamlit web app that helps researchers, students, and 
 ## Installation & Setup
 
 ### 1. Clone the repository
-``bash
+```bash
 git clone https://github.com/YOUR_USERNAME/AI-Powered-Research-Assistant.git
 cd AI-Powered-Research-Assistant
-
+```
 **2. Create and activate a virtual environment**
+```
 python3 -m venv .venv
 source .venv/bin/activate
 On Windows: .venv\Scripts\activate
+```
 
 **3. Install dependencies**
 pip install -r requirements.txt
@@ -45,20 +47,22 @@ streamlit run app.py
 
 ---
 
-**Project Structure**
+## 📁 Project Structure
+
+```text
 AI-Powered-Research-Assistant/
-│
-├── app.py                    # Main Streamlit interface
-├── requirements.txt          # Python dependencies
+├── app.py                   # Main Streamlit interface
+├── requirements.txt         # Python dependencies
+├── README.md                # Project documentation
 │
 ├── app/
-│   ├── config.py             # Configurations (API keys, paths)
-│   ├── schema.py             # ResearchPaper model
-│   ├── paper_fetcher.py      # Multi-source async fetcher
-│   ├── summarizer.py         # LLM summarizer logic
-│   ├── paper_downloader.py   # Download PDFs
-│   └── utils.py              # Utility functions
-
+│   ├── config.py            # Configurations (API keys, paths)
+│   ├── schema.py            # ResearchPaper model
+│   ├── paper_fetcher.py     # Multi-source async fetcher
+│   ├── summarizer.py        # LLM summarizer logic
+│   ├── paper_downloader.py  # Download PDFs
+│   └── utils.py             # Utility functions
+```
 ---
 
 **Example Use Case**
