@@ -69,13 +69,12 @@ AI-Powered-Research-Assistant/
 ---
 
 **Example Use Case**
-```
-	1.	Go to the Search Papers tab.
-	2.	Enter a query like Applications of AI in finance.
-	3.	Click Fetch & Summarize.
-	4.	Browse papers in the Papers List tab.
-	5.	Download PDFs or upload your own.
-```
+- Go to the Search Papers tab.
+- Enter a query like Applications of AI in finance.
+- Click Fetch & Summarize.
+- Browse papers in the Papers List tab.
+- Download PDFs or upload your own.
+
 ---
 
 **Contributing**
