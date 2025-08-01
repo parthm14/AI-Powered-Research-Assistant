@@ -1,5 +1,3 @@
-# app/paper_fetcher.py
-
 import feedparser
 import aiohttp
 import asyncio
