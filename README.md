@@ -43,7 +43,9 @@ pip install -r requirements.txt
 **4. Run the app**
 streamlit run app.py
 
-**5. Project Structure**
+---
+
+**Project Structure**
 AI-Powered-Research-Assistant/
 │
 ├── app.py                    # Main Streamlit interface
@@ -67,6 +69,7 @@ AI-Powered-Research-Assistant/
 	5.	Download PDFs or upload your own.
 
 ---
+
 **Contributing**
 
 Contributions are welcome! Feel free to:
@@ -74,6 +77,7 @@ Contributions are welcome! Feel free to:
 	•	Submit pull requests with improvements
 
 ---
+
  **Acknowledgements**
       	•	ArXiv API
 	•	Semantic Scholar API
