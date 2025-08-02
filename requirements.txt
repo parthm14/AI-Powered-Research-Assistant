@@ -6,3 +6,4 @@ google-generativeai
 feedparser
 aiohttp
 fitz
+frontend
