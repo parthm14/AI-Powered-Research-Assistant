@@ -1,6 +1,8 @@
 # app/config.py
 
 import os
+# Google Gemini API key 
+GOOGLE_API_KEY = "AIzaSyDG_e_CRU7837yiDyEyO4dsLBabHuoMLFo"
 
 # OpenSearch Configuration
 OPENSEARCH_URL = "http://localhost:9200"

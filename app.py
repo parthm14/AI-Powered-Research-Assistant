@@ -1,40 +1,43 @@
+# app.py
+
 import streamlit as st
 import asyncio
 from app.schema import ResearchPaper
 from app.paper_fetcher import fetch_papers
 from app.summarizer import summarize_text
 from app.paper_downloader import download_pdf
-from app.utils import generate_citation  
+from app.utils import generate_citation
+from app.generate_answer import generate_response
 
-st.set_page_config(page_title="ResearchBot", layout="wide")
+st.set_page_config(page_title="AI-Powered Research Assistant", layout="wide")
 
-# Global memory (session state)
+# Initialize session state
 if "papers" not in st.session_state:
     st.session_state.papers = []
 if "summaries" not in st.session_state:
     st.session_state.summaries = []
 if "query" not in st.session_state:
     st.session_state.query = ""
-if "favorites" not in st.session_state:
-    st.session_state.favorites = []
-if "notes" not in st.session_state:
-    st.session_state.notes = []
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
 # Tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "Search Papers",
     "Papers List",
-    "Bibliography",
+    "Citations",
     "Upload PDF",
-    "Favorites & Notes"
+    "Chat with AI"
 ])
 
+# ---------------- TAB 1: SEARCH PAPERS ----------------
 with tab1:
     st.title("Search Research Papers")
-    st.markdown("Search and summarize research papers from ArXiv, Semantic Scholar, and CORE.")
-
-    query = st.text_input("Enter your research topic:", value=st.session_state.query,
-                          placeholder="e.g. Applications of AI in finance and banking")
+    query = st.text_input(
+        "Enter your research topic:",
+        value=st.session_state.query,
+        placeholder="e.g. Applications of AI in finance and banking"
+    )
 
     async def summarize_all(papers: list[ResearchPaper]) -> list[str]:
         tasks = [summarize_text(paper.summary or paper.title or "No content") for paper in papers]
@@ -55,9 +58,9 @@ with tab1:
             st.session_state.summaries = summaries
             st.success("Papers and summaries updated.")
 
+# ---------------- TAB 2: LIST PAPERS ----------------
 with tab2:
     st.title("Retrieved Papers")
-
     if not st.session_state.papers:
         st.info("No papers to display yet. Please run a search in the first tab.")
     else:
@@ -74,63 +77,66 @@ with tab2:
                             st.success(f"Downloaded to {file_path}")
                         else:
                             st.error("Download failed.")
-                # Favorite toggle
-                if paper in st.session_state.favorites:
-                    if st.button("❌ Remove from Favorites", key=f"remove_{paper.title}"):
-                        index = st.session_state.favorites.index(paper)
-                        st.session_state.favorites.pop(index)
-                        st.session_state.notes.pop(index)
-                        st.success("Removed from favorites")
-                else:
-                    if st.button("Add to Favorites", key=f"fav_{paper.title}"):
-                        st.session_state.favorites.append(paper)
-                        st.session_state.notes.append("")
-                        st.success("Added to favorites")
 
+# ---------------- TAB 3: CITATIONS ----------------
 with tab3:
     st.title("Citations & Bibliography")
-
     if not st.session_state.papers:
-        st.info("No papers to cite yet. Please run a search first.")
+        st.info("No citations to display yet. Please run a search first.")
     else:
-        st.markdown("### Formatted Citations (APA Style)")
         for paper in st.session_state.papers:
-            st.markdown(generate_citation(paper))
+            citation = generate_citation(paper)
+            st.markdown(f"- {citation}")
 
+# ---------------- TAB 4: UPLOAD PDF ----------------
 with tab4:
     st.title("Upload Your Own PDF")
     uploaded_file = st.file_uploader("Upload a research paper PDF", type=["pdf"])
     if uploaded_file:
         st.success(f"Uploaded: {uploaded_file.name}")
-        # Future: display PDF text using `load_pdf_text(uploaded_file)`
+        # You can later integrate PDF processing here
+
+# ---------------- TAB 5: Chat with AI  ----------------
 
 with tab5:
-    st.title("Favorites & Notes")
+    st.title("Chat with AI about Retrieved Papers")
 
-    if not st.session_state.favorites:
-        st.info("No favorite papers added yet.")
-    else:
-        for i, paper in enumerate(st.session_state.favorites):
-            with st.expander(paper.title or f"Paper {i+1}"):
-                st.markdown(f"**Authors:** {paper.authors}")
-                st.markdown(f"**Source:** {paper.source}")
-                st.markdown(f"**Link:** [View Paper]({paper.url})")
-                note = st.text_area("Your Note:", value=st.session_state.notes[i], key=f"note_{i}")
-                st.session_state.notes[i] = note
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
 
-        # Download button for all notes + favorites
-        export_content = ""
-        for paper, note in zip(st.session_state.favorites, st.session_state.notes):
-            export_content += f"Title: {paper.title}\n"
-            export_content += f"Authors: {paper.authors}\n"
-            export_content += f"Source: {paper.source}\n"
-            export_content += f"URL: {paper.url}\n"
-            export_content += f"Note: {note or 'No note added.'}\n"
-            export_content += "-" * 50 + "\n\n"
+    user_input = st.text_input("Ask a question about the retrieved papers:", key="chat_input")
 
-        st.download_button(
-            label="Download All Favorites & Notes",
-            data=export_content,
-            file_name="favorites_notes.txt",
-            mime="text/plain"
-        )
+    col1, col2 = st.columns([4, 1])  # Send button wider, Clear Chat smaller
+
+    with col1:
+        send_clicked = st.button("Send")
+
+    with col2:
+        clear_clicked = st.button("Clear Chat")
+
+    if clear_clicked:
+        st.session_state.chat_history = []
+        st.rerun()
+
+    if send_clicked and user_input.strip():
+        # Collect context from summaries
+        context_text = "\n".join([
+            f"{p.title} - {s}" for p, s in zip(st.session_state.papers, st.session_state.summaries)
+        ])
+        # Append user message in standardized format
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
+
+        # Generate AI response
+        ai_response = generate_response(user_input, context_text)
+        st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
+
+        st.rerun()
+
+    # Display chat history safely
+    for msg in st.session_state.chat_history:
+        role = msg.get("role", "user")  # default to 'user' if missing
+        content = msg.get("content", "")
+        if role == "user":
+            st.markdown(f"**You:** {content}")
+        else:
+            st.markdown(f"**AI:** {content}")

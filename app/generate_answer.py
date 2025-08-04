@@ -3,23 +3,38 @@
 import google.generativeai as genai
 from app.config import GOOGLE_API_KEY
 
+# Configure Gemini
 genai.configure(api_key=GOOGLE_API_KEY)
 
 model = genai.GenerativeModel("gemini-2.5-pro")
 
 
-def generate_response(query: str, context: str) -> str:
+def generate_response(question: str, context: str, history: list = None) -> str:
     """
-    Uses Gemini Pro to generate an answer based on query and retrieved context.
+    Returns a complete Gemini AI answer (non-streaming).
     """
-    prompt = (
-        f"You are a helpful research assistant. Based on the following research context:\n\n"
-        f"{context}\n\n"
-        f"Answer the user's query:\n{query}"
+    if history is None:
+        history = []
+
+    history_text = "\n".join(
+        [f"User: {msg['user']}\nAI: {msg['ai']}" for msg in history]
     )
 
-    try:
-        response = model.generate_content(prompt)
-        return response.text.strip()
-    except Exception as e:
-        return f"Error generating response: {e}"
+    prompt = f"""
+You are an AI assistant helping the user understand research papers.
+Context from retrieved papers:
+{context}
+
+Conversation so far:
+{history_text}
+
+User: {question}
+AI:
+"""
+
+    response = model.generate_content(prompt)
+    answer = response.text.strip() if hasattr(response, "text") else ""
+
+    # Save to history
+    history.append({"user": question, "ai": answer})
+    return answer
