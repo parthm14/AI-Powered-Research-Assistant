@@ -34,5 +34,5 @@ nest_asyncio==1.6.0
 
 # Optional (used by some packages, but safe to include)
 numpy==1.24.0
-PyMuPDF==1.22.5
+PyMuPDF==1.21.1
 tools
