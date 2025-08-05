@@ -8,7 +8,6 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 model = genai.GenerativeModel("gemini-2.5-pro")
 
-
 def generate_response(question: str, context: str, history: list = None) -> str:
     """
     Returns a complete Gemini AI answer (non-streaming).
