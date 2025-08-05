@@ -2,7 +2,7 @@
 
 import os
 # Google Gemini API key 
-GOOGLE_API_KEY = "AIzaSyDG_e_CRU7837yiDyEyO4dsLBabHuoMLFo"
+GOOGLE_API_KEY = "AIzaSyAWCmptATDx20lfhK5SZy_E07wokPAhnOg"
 
 # OpenSearch Configuration
 OPENSEARCH_URL = "http://localhost:9200"
