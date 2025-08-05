@@ -1,28 +1,28 @@
 # Core frontend
-streamlit==1.27.0
+streamlit==1.33.0
 
 # Async + Paper fetching
 aiohttp==3.9.5
-feedparser==6.0.11
+feedparser==6.0.10
 
 # Gemini API (Google Generative AI)
 google-generativeai==0.4.1
 
-# PDF text extraction
-PyMuPDF==1.23.22
+# PDF text extraction (latest prebuilt wheel for PyMuPDF)
+PyMuPDF==1.24.9
 
 # Data modeling + utilities
-pydantic==1.10.8
+pydantic==1.10.15
 
 # LangChain + OpenSearch integration
-langchain==0.1.13
+langchain==0.1.20
 opensearch-py==2.4.2
-langchain-community==0.0.32
-sentence-transformers==2.5.1
+langchain-community==0.0.36   # picked for wheel availability
+sentence-transformers==2.2.2  # smaller, faster install than latest
 
 # Summarization, Reranking & NLP
 transformers==4.41.2
-torch==2.2.2
+torch==2.2.0  # last version with manylinux prebuilt wheels for ARM & x86_64
 scikit-learn==1.4.1.post1
 
 # File & encoding utilities
@@ -32,7 +32,5 @@ chardet==5.2.0
 # Streamlit cloud compat
 nest_asyncio==1.6.0
 
-# Optional (used by some packages, but safe to include)
-numpy==1.24.0
-PyMuPDF==1.21.1
-tools
+# Optional (safe to include)
+numpy==1.26.4
